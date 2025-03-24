@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriConnect - Farmers' Social Media</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dark-theme">
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-seedling"></i>
+                <h1>AgroConnect</h1>
+            </div>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search plants, farmers...">
+            </div>
+            <div class="nav-actions">
+                <button id="dashboardBtn" class="nav-btn" title="Dashboard">
+                    <i class="fas fa-chart-pie"></i>
+                </button>
+                <button id="feedBtn" class="nav-btn active" title="Feed">
+                    <i class="fas fa-leaf"></i>
+                </button>
+                <div class="profile">
+                    <div class="profile-img">
+                        <img src="/placeholder.svg?height=40&width=40" alt="Profile">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Dashboard Section -->
+        <section class="dashboard" id="dashboardSection" style="display: none;">
+            <div class="dashboard-header">
+                <h2>Plant Dashboard</h2>
+                <p>Track and monitor your plant collection</p>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="container1">
+                    <div class="plant-image"></div>
+                    <div class="plant-details">
+                        <h2><i class="fas fa-cloud-sun"></i> Weather</h2>
+                        <p id="weather">Loading...</p>
+                        <h2><i class="fas fa-fire"></i> Current Streak</h2>
+                        <p id="streak">0 Days</p>
+                        <h2><i class="fas fa-leaf"></i> Plant Care Tips</h2>
+                        <p id="tips">Water plants in the morning for best results.</p>
+                    </div>
+                </div>
+                
+                
+                <div class="dashboard-card chart-card">
+                    <h3>Plant Types</h3>
+                    <div class="chart-container">
+                        <canvas id="plantTypesChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card recent-card">
+                    <h3>Recent Activity</h3>
+                    <ul class="activity-list">
+                        <li class="activity-item">
+                            <div class="activity-icon water">
+                                <i class="fas fa-tint"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Watered Monstera</div>
+                                <div class="activity-time">2 hours ago</div>
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon fertilize">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Fertilized Snake Plant</div>
+                                <div class="activity-time">Yesterday</div>
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon repot">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Repotted Fiddle Leaf Fig</div>
+                                <div class="activity-time">3 days ago</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="dashboard-card calendar-card">
+                    <h3>Upcoming Tasks</h3>
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <div class="task-checkbox">
+                                <input type="checkbox" id="task1">
+                                <label for="task1"></label>
+                            </div>
+                            <div class="task-content">
+                                <div class="task-title">Water Monstera Deliciosa</div>
+                                <div class="task-date">Tomorrow</div>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <div class="task-checkbox">
+                                <input type="checkbox" id="task2">
+                                <label for="task2"></label>
+                            </div>
+                            <div class="task-content">
+                                <div class="task-title">Fertilize Snake Plant</div>
+                                <div class="task-date">In 3 days</div>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <div class="task-checkbox">
+                                <input type="checkbox" id="task3">
+                                <label for="task3"></label>
+                            </div>
+                            <div class="task-content">
+                                <div class="task-title">Mist Fiddle Leaf Fig</div>
+                                <div class="task-date">In 5 days</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Farmers Feed -->
+        <section class="farmers-feed" id="farmersFeedSection">
+            <!-- Plant Cards will be dynamically added here -->
+        </section>
+    </main>
+
+    <!-- Add New Plant Button (Floating) -->
+    <button class="add-plant-btn" id="addPlantBtn">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Add New Plant Modal -->
+    <div class="modal" id="addPlantModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Plant</h2>
+                <button class="close-btn" id="closeAddPlantModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addPlantForm">
+                    <div class="image-upload">
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag and drop an image or click to browse</p>
+                            <p class="small">PNG, JPG or WEBP (max. 5MB)</p>
+                            <input type="file" id="plantImage" accept="image/*" hidden>
+                            <button type="button" class="upload-btn" id="uploadBtn">Select Image</button>
+                        </div>
+                        <div class="preview-area" id="previewArea" style="display: none;">
+                            <img id="imagePreview" src="/placeholder.svg" alt="Preview">
+                            <button type="button" class="change-img-btn" id="changeImgBtn">Change Image</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="plantName">Plant Name</label>
+                        <input type="text" id="plantName" required placeholder="Enter plant name">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="weather">Weather</label>
+                            <select id="weather" required>
+                                <option value="Sunny">Sunny</option>
+                                <option value="Partly Cloudy">Partly Cloudy</option>
+                                <option value="Cloudy">Cloudy</option>
+                                <option value="Rainy">Rainy</option>
+                                <option value="Indoor">Indoor</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="temperature">Temperature</label>
+                            <select id="temperature" required>
+                                <option value="18°C">18°C</option>
+                                <option value="20°C">20°C</option>
+                                <option value="22°C">22°C</option>
+                                <option value="24°C">24°C</option>
+                                <option value="26°C">26°C</option>
+                                <option value="28°C">28°C</option>
+                                <option value="30°C">30°C</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="careInstructions">Care Instructions</label>
+                        <textarea id="careInstructions" required placeholder="Enter care instructions"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" id="cancelAddPlant">Cancel</button>
+                        <button type="submit" class="submit-btn">Add Plant</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plant Details Modal -->
+    <div class="modal" id="plantDetailsModal">
+        <div class="modal-content details-modal">
+            <button class="close-btn" id="closePlantDetailsModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="plant-image">
+                <img id="detailsImage" src="/placeholder.svg" alt="Plant Image">
+            </div>
+            <div class="plant-details">
+                <div class="farmer-info">
+                    <div class="farmer-img">
+                        <img id="farmerAvatar" src="/placeholder.svg" alt="Farmer">
+                    </div>
+                    <div>
+                        <h3 id="farmerName"></h3>
+                        <p class="post-time">2 hours ago</p>
+                    </div>
+                </div>
+                <h2 id="detailsPlantName"></h2>
+                <div class="plant-stats">
+                    <div class="stat">
+                        <i class="fas fa-cloud"></i>
+                        <span id="detailsWeather"></span>
+                        <span class="stat-label">Weather</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-thermometer-half"></i>
+                        <span id="detailsTemperature"></span>
+                        <span class="stat-label">Temperature</span>
+                    </div>
+                    <div class="stat">
+                        <i class="fas fa-tint"></i>
+                        <span>Weekly</span>
+                        <span class="stat-label">Watering</span>
+                    </div>
+                </div>
+                <div class="care-instructions">
+                    <h3>Care Instructions</h3>
+                    <p id="detailsCareInstructions"></p>
+                </div>
+                <div class="post-actions">
+                    <button class="action-btn like-btn">
+                        <i class="far fa-heart"></i>
+                        <span id="detailsLikes">0</span>
+                    </button>
+                    <button class="action-btn comment-btn">
+                        <i class="far fa-comment"></i>
+                        <span id="detailsComments">0</span>
+                    </button>
+                    <button class="action-btn share-btn">
+                        <i class="fas fa-share"></i>
+                        <span>Share</span>
+                    </button>
+                </div>
+                <div class="comments-section">
+                    <h3>Comments (<span id="commentCount">0</span>)</h3>
+                    <div class="add-comment">
+                        <div class="user-img">
+                            <img src="/placeholder.svg?height=32&width=32" alt="Your avatar">
+                        </div>
+                        <div class="comment-input">
+                            <input type="text" placeholder="Add a comment...">
+                            <button class="post-comment-btn">Post</button>
+                        </div>
+                    </div>
+                    <div class="comments-list" id="commentsList">
+                        <!-- Comments will be added here dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
